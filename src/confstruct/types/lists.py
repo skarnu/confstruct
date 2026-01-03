@@ -1,9 +1,9 @@
 from typing import Any, get_args
 
 
-class ListOf(list):
+class ListOf[T: type](list):
     @classmethod
-    def __validate__(cls, value: Any, typ: type):
+    def __validate__(cls, value: Any, typ: type) -> list[T]:
         t = get_args(typ)[0]
         if isinstance(value, str):
             parts = [p.strip() for p in value.split(",") if p.strip()]
