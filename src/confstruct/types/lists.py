@@ -11,9 +11,14 @@ class ListOf(list):
     @classmethod
     def __validate__(cls, value: Any):
         if isinstance(value, str):
-            parts = [p.strip() for p in value.split(",") if p.strip()]
+            parts = []
             t = cls.__item_type__
-            return cls([t(p) for p in parts])
+            for p in value.split(","):
+                p = p.strip()
+                if not p:
+                    continue
+                parts.append(t(p))
+            return cls(parts)
         if isinstance(value, list):
             return cls(value)
         raise TypeError("Expected str or list")
