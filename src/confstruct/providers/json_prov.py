@@ -1,4 +1,4 @@
-import json
+import msgspec
 
 from .abc import ABCProvider
 
@@ -8,7 +8,7 @@ class JSONProvider(ABCProvider):
         if not isinstance(value, (bytes, str)):
             self._value = value
         else:
-            self._value = json.loads(value)
+            self._value = msgspec.json.decode(value, type=dict[str, str])
         self.normalize()
 
     def normalize(self):
@@ -17,5 +17,5 @@ class JSONProvider(ABCProvider):
             results[key.lower()] = value
         self._value = results
 
-    def get_value(self, key: str) -> str:
-        return self._value[key.lower()]
+    def get_value(self, key: str) -> str | None:
+        return self._value.get(key.lower())

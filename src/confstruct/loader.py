@@ -16,8 +16,11 @@ def load[M: msgspec.Struct](
     if not provider:
         provider = EnvProvider()
     data: dict[str, Any] = {}
-    for field in obj.__struct_fields__:
-        data[field] = provider.get_value(field)
+    for field in msgspec.structs.fields(obj):
+        val = provider.get_value(field.name) or field.default
+        if not val:
+            raise ValueError(f"Cannot find value for field {field.name!r}")
+        data[field.name] = val
 
     payload = json.dumps(data).encode("utf-8")
     return msgspec.json.decode(payload, type=obj, dec_hook=dec_hook)
