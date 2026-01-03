@@ -1,14 +1,16 @@
+from typing import Any
+
 import msgspec
 
 from .abc import ABCProvider
 
 
 class JSONProvider(ABCProvider):
-    def __init__(self, value: dict[str, str] | bytes | str) -> None:
+    def __init__(self, value: dict[str, Any] | bytes | str) -> None:
         if not isinstance(value, (bytes, str)):
             self._value = value
         else:
-            self._value = msgspec.json.decode(value, type=dict[str, str])
+            self._value = msgspec.json.decode(value, type=dict[str, Any])
         self.normalize()
 
     def normalize(self):
