@@ -12,6 +12,7 @@ def load[M: msgspec.Struct](
     obj: type[M],
     provider: ABCProvider | None = None,
     dec_hook: Callable[[type, Any], Any] = dec_hook,
+    strict: bool = False,
 ) -> M:
     if not provider:
         provider = EnvProvider()
@@ -23,4 +24,4 @@ def load[M: msgspec.Struct](
         data[field.name] = val
 
     payload = json.dumps(data).encode("utf-8")
-    return msgspec.json.decode(payload, type=obj, dec_hook=dec_hook)
+    return msgspec.json.decode(payload, type=obj, dec_hook=dec_hook, strict=strict)
