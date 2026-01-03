@@ -1,10 +1,12 @@
 from typing import Any
 
 
+def _fallback_encode(obj: Any) -> str:
+    return str(obj)
+
+
 def enc_hook(obj: Any):
-    if hasattr(obj, "__encode__"):
+    if callable(getattr(obj, "__encode__", None)):
         return obj.__encode__()
-    parents = type(obj).mro()
-    if len(parents) == 1:
-        raise NotImplementedError
-    return parents[0](obj)
+    return _fallback_encode(obj)
+

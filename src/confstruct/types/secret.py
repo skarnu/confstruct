@@ -18,3 +18,6 @@ class SecretStr(str):  # noqa: SLOT000
     @classmethod
     def __validate__(cls, value: str) -> SecretStr:
         return cls(value)
+
+    def __encode__(self) -> str:
+        return self.get()
