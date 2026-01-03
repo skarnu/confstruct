@@ -1,0 +1,15 @@
+[project]
+name = "confstruct"
+description = "Modern library to configure your Python apps"
+version = "0.1.0"
+maintainers = [{ name="skarnu", email="amerfoe@gmail.com" }]
+requires-python = ">=3.14"
+dependencies = [
+    "msgspec>=0.20.0",
+    "python-dotenv>=1.2.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.14.10",
+]
