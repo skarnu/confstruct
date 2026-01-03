@@ -1,7 +1,7 @@
 from typing import Any, get_args
 
 
-class ListOf[T: type](list):
+class ListOf[T](list):
     @classmethod
     def __validate__(cls, value: Any, typ: type) -> list[T]:
         t = get_args(typ)[0]
