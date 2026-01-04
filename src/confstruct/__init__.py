@@ -1,1 +1,1 @@
-from .loader import load
+from .loader import load as load
