@@ -1,24 +1,13 @@
-from typing import Any
+from typing import Any, get_args
 
 
-class ListOf(list):
-    __item_type__: type
-
-    def __class_getitem__(cls, item_type: type):  # pyright: ignore[reportIncompatibleMethodOverride]
-        name = f"{cls.__name__}[{getattr(item_type, '__name__', str(item_type))}]"
-        return type(name, (cls,), {"__item_type__": item_type})
-
+class ListOf[T](list):
     @classmethod
-    def __validate__(cls, value: Any):
+    def __validate__(cls, value: Any, typ: type) -> list[T]:
+        t = get_args(typ)[0]
         if isinstance(value, str):
-            parts = []
-            t = cls.__item_type__
-            for p in value.split(","):
-                p = p.strip()
-                if not p:
-                    continue
-                parts.append(t(p))
-            return cls(parts)
+            parts = [p.strip() for p in value.split(",") if p.strip()]
+            return cls([t(p) for p in parts])
         if isinstance(value, list):
             return cls(value)
         raise TypeError("Expected str or list")
