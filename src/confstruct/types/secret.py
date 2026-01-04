@@ -16,7 +16,7 @@ class SecretStr(str):  # noqa: SLOT000
         return f"SecretStr({len(self.__value__) * '*'})"
 
     @classmethod
-    def __validate__(cls, value: str) -> SecretStr:
+    def __validate__(cls, value: str, *_) -> SecretStr:
         return cls(value)
 
     def __encode__(self) -> str:
