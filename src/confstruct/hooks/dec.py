@@ -5,7 +5,7 @@ from typing import Any, Union, get_args, get_origin
 
 
 @lru_cache(maxsize=1024)
-def _get_validate_method(typ: type) -> callable:
+def _get_validate_method(typ: type) -> callable:  # pyright: ignore[reportGeneralTypeIssues]
     """
     Return the cached ``__validate__`` method for a type, if any.
     """
