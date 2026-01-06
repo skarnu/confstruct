@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, ClassVar, Union
+from typing import Any, ClassVar
 
 import msgspec
 
