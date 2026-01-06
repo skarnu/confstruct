@@ -1,13 +1,7 @@
 import json
-from functools import lru_cache
-from typing import Any, Generic, TypeVar, get_args
+from typing import Any, TypeVar, get_args
 
 T = TypeVar("T")
-
-
-def _get_element_type(typ: type) -> type:
-    """Extract element type from ``ListOf[T]`` with caching."""
-    return typ.__orig_bases__[0].__args__[0]
 
 
 class ListOf[T]:
@@ -28,7 +22,7 @@ class ListOf[T]:
         self._inner_type = inner_type
         self._type_str = str(inner_type)
 
-    def _get_converter(self, value_type: type) -> callable:
+    def _get_converter(self, value_type: type) -> callable:  # pyright: ignore[reportGeneralTypeIssues]
         """Return a fast converter for simple value types."""
         if value_type in (int, str, float, bool):
             return value_type
