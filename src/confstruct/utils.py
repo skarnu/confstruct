@@ -5,7 +5,7 @@ import msgspec
 
 
 @lru_cache(maxsize=128)
-def get_struct_fields(obj_type: type) -> tuple[msgspec.structs.Field, ...]:
+def get_struct_fields(obj_type: type) -> tuple[msgspec.structs.FieldInfo, ...]:
     """Return msgspec struct fields for the given type (cached)."""
     return msgspec.structs.fields(obj_type)
 
