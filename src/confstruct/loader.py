@@ -1,5 +1,5 @@
 from collections.abc import Callable
-from typing import Any, get_args, get_origin
+from typing import Any
 
 import msgspec
 
@@ -77,7 +77,7 @@ def _extreme_fast_json_load[M](obj: type[M], data: dict[str, Any]) -> M:
     return obj(**kwargs)
 
 
-def load[M](
+def load[M](  # noqa: C901, PLR0912
     obj: type[M],
     provider: ABCProvider | None = None,
     dec_hook: Callable[[type, Any], Any] = dec_hook,
@@ -87,11 +87,11 @@ def load[M](
     provider = provider or EnvProvider()
 
     if hasattr(provider, "get_all") and not isinstance(provider, EnvProvider):
-        data = provider.get_all()
+        data = provider.get_all()  # pyright: ignore[reportAttributeAccessIssue]
         return _extreme_fast_json_load(obj, data)
 
     if hasattr(provider, "get_all"):
-        data = provider.get_all()
+        data = provider.get_all()  # pyright: ignore[reportAttributeAccessIssue]
 
         required = set(get_required_field_names_lower(obj))
         data_keys = set(data.keys())
