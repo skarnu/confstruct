@@ -1,4 +1,3 @@
-from .loader import load as load
+from .loader import load
 
-__version__ = "1.0.0"
 __all__ = ["load"]
