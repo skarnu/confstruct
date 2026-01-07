@@ -4,7 +4,7 @@ from typing import Any, TypeVar, get_args
 T = TypeVar("T")
 
 
-class ListOf[T]:
+class ListOf(list):
     """
     Lightweight list-like type with flexible parsing rules.
 
@@ -16,36 +16,38 @@ class ListOf[T]:
     - Accepts comma-separated strings (``"1,2,3"``).
     """
 
-    __slots__ = ("_inner_type", "_type_str")
-
-    def __init__(self, inner_type: type[T]) -> None:
-        self._inner_type = inner_type
-        self._type_str = str(inner_type)
-
-    def _get_converter(self, value_type: type) -> callable:  # pyright: ignore[reportGeneralTypeIssues]
-        """Return a fast converter for simple value types."""
-        if value_type in (int, str, float, bool):
-            return value_type
-        return lambda x: x
+    def __class_getitem__(cls, item):
+        """Support for generic syntax ListOf[T]."""
+        return cls
 
     @classmethod
     def __validate__(cls, value: Any, typ: Any):  # noqa: C901
         """Validation hook used by ``dec_hook`` / ``msgspec``.
 
-        Attempts to coerce the input into a ``list[T]`` according to the
+        Attempts to coerce the input into a ``ListOf[T]`` according to the
         rules described in the class docstring.
         """
+        if isinstance(value, cls):
+            # Already a ListOf, return as-is
+            return value
+            
         if isinstance(value, list):
             args = get_args(typ)
+            converted = []
             if args:
                 inner_type = args[0]
 
                 if inner_type in (int, str, float, bool):
                     try:
-                        return [inner_type(item) for item in value]
+                        converted = [inner_type(item) for item in value]
                     except (TypeError, ValueError):
-                        pass
-            return value
+                        converted = value
+                else:
+                    converted = value
+            else:
+                converted = value
+            
+            return cls(converted)
 
         if isinstance(value, str):
             if value.startswith("[") and value.endswith("]"):
@@ -63,12 +65,12 @@ class ListOf[T]:
                     inner_type = args[0]
                     if inner_type in (int, str):
                         try:
-                            return [inner_type(item) for item in items]
+                            return cls([inner_type(item) for item in items])
                         except (TypeError, ValueError):
                             pass
-                return items
+                return cls(items)
 
-        return value
+        return cls(value) if isinstance(value, list) else value
 
     @classmethod
     def __mspec_decode__(cls, value: Any, typ: Any):
