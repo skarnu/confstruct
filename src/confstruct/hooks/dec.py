@@ -8,8 +8,22 @@ from typing import Any, Union, get_args, get_origin
 def _get_validate_method(typ: type) -> callable:  # pyright: ignore[reportGeneralTypeIssues]
     """
     Return the cached ``__validate__`` method for a type, if any.
+
+    Handles both direct __validate__ and __validate__ on __origin__ (PEP 695 generics).
     """
-    return getattr(typ, "__validate__", None)
+    # Try direct __validate__ first
+    validate = getattr(typ, "__validate__", None)
+    if validate is not None:
+        return validate
+
+    # Try __validate__ on __origin__ for PEP 695 generic types
+    origin = getattr(typ, "__origin__", None)
+    if origin is not None:
+        validate = getattr(origin, "__validate__", None)
+        if validate is not None:
+            return validate
+
+    return None
 
 
 @lru_cache(maxsize=256)
@@ -154,6 +168,7 @@ def dec_hook[M](typ: type[M], value: Any) -> M:
     if typ in _SIMPLE_TYPES:
         return typ(value)  # type: ignore[call-arg]
 
+    # Try __validate__ method (works for custom types and PEP 695 generics)
     validate_method = _get_validate_method(typ)
     if validate_method is not None:
         try:
