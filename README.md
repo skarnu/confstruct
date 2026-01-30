@@ -3,6 +3,9 @@
 # Confstruct
 Modern library to configure your Python apps based on msgspec
 
+>[!CAUTION]
+>The project is archived. I recommend using [betterconf](https://github.com/prostomarkeloff/betterconf) instead.
+
 <p>
     <img alt="uv" src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fastral-sh%2Fuv%2Fmain%2Fassets%2Fbadge%2Fv0.json&style=flat-square&labelColor=232226&color=6341AC&link=https%3A%2F%2Fastral.sh%2Fuv">
     <img alt="Ruff" src="https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fastral-sh%2Fruff%2Fmain%2Fassets%2Fbadge%2Fv2.json&style=flat-square&labelColor=232226&color=6341AC&link=https%3A%2F%2Fastral.sh%2Fruff">
@@ -14,13 +17,13 @@ Modern library to configure your Python apps based on msgspec
 <h2><img src='https://github.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/blob/master/Emojis/Objects/Pencil.png?raw=true' width='20' style='vertical-align:middle'> Usage</h2>
 
 ```shell
-pip install "confstruct @ https://github.com/skarnu/confstruct.git"
+pip install "confstruct @ https://github.com/univied/confstruct.git"
 ```
 
 ```python
 import msgspec
 from confstruct import load
-from confstruct.provider import JSONProvider
+from confstruct.providers import JSONProvider
 from confstruct.types import SecretStr
 
 class Config(msgspec.Struct):
